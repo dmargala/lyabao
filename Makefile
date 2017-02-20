@@ -3,8 +3,8 @@ NAME=output/test
 all: delta_field inspect
 
 
-TARGETLIST=../qusp/dr12-lya-quasars.dat
-NTARGETS=1000
+TARGETLIST=test-targetlist.txt
+NTARGETS=0
 FORESTLO=1040
 FORESTHI=1200
 NORMLO=1275
