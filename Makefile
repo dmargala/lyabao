@@ -66,5 +66,6 @@ delta_field: $(NAME)-delta.hdf5
 $(NAME)-delta-scatter.png: bin/inspect_deltas.py $(NAME)-delta.hdf5
 	python bin/inspect_deltas.py --name $(NAME)
 
+inspect: $(NAME)-delta-scatter.png
 
 .PHONY: all delta_field inspect
