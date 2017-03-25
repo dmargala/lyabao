@@ -163,7 +163,7 @@ class FullSpecFile(object):
         self.hdulist = fitsio.FITS(path, mode=fitsio.READONLY)
         self.header = self.hdulist[0].read_header()
 
-    def get_data(self):
+    def get_data(self, column_name='flux'):
         '''
         Returns the observed flux, ivar for this spectrum.
         Masks pixels indicated by `and_mask` and `ivar <= 0`
@@ -187,7 +187,7 @@ class FullSpecFile(object):
         ]
         data = np.empty(num_pixels, dtype=dtype)
         data['loglam'][:] = hdu['loglam'][:]
-        data['flux'][:] = hdu['flux'][:]
+        data['flux'][:] = hdu[column_name][:]
         data['ivar'][:] = ivar[:]
 
         return ma.MaskedArray(data, mask=bad_pixels)
@@ -358,11 +358,16 @@ def main():
         help='Maximum fiducial pixel index')
     parser.add_argument('--spall-redshift', action='store_true',
         help='Use redshift from hdu 2 of spec file, instead of quasar catalog')
+    parser.add_argument('--use-mock-F', action='store_true',
+        help='Use mock transmitted flux fraction instead of flux')
     args = parser.parse_args()
 
     if not args.dry_run and args.name is None:
         raise RuntimeError('Must specify output file name base with --name or '
                            'explicity set --dry-run for a "dry run"')
+
+    if args.use_mock_F and not args.mock:
+        raise RuntimeError('--use-mock-F only valid with --mock')
 
     finder = bossdata.path.Finder()
     mirror = bossdata.remote.Manager()
@@ -427,7 +432,10 @@ def main():
             skim_redshift[i] = z
 
             # process spectrum data
-            data = spec.get_data()
+            flux_column_name = 'flux'
+            if args.use_mock_F:
+                flux_column_name = 'mock_F'
+            data = spec.get_data(column_name=flux_column_name)
             loglam = data['loglam'][:]
             flux = data['flux'][:]
             ivar = data['ivar'][:]
