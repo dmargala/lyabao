@@ -1,20 +1,27 @@
-NAME=output/test_mock
+MOCK_INDEX=000
+OUTDIR=output/mock_$(MOCK_INDEX)
+NAME=$(OUTDIR)/mock_$(MOCK_INDEX)
+
 
 all: delta_field inspect
 
 
 TARGETLIST=data/mock_goodtargets_1_10.txt
-NTARGETS=100
+NTARGETS=1000
 FORESTLO=1040
 FORESTHI=1200
 NORMLO=1275
 NORMHI=1285
 MAXFIDINDEX=1900
-SPALLREDSHIFT="--spall-redshift"
-# MOCK=
 
 
-$(NAME)-skim.hdf5: bin/uniform_grid.py $(TARGETLIST)
+$(OUTDIR):
+	-mkdir -p $(OUTDIR)
+
+$(NAME)-skim.hdf5: bin/uniform_grid.py $(TARGETLIST) $(OUTDIR)
+	export BOSS_LOCAL_ROOT=/share/dm/all; \
+	export BOSS_SAS_PATH=/sas/dr12/boss; \
+	export BOSS_REDUX_VERSION=M3_0_0/$(MOCK_INDEX); \
 	python bin/uniform_grid.py --name $(NAME) \
 		-i $(TARGETLIST) \
 		--verbose \
@@ -24,7 +31,9 @@ $(NAME)-skim.hdf5: bin/uniform_grid.py $(TARGETLIST)
 		--norm-lo $(NORMLO) \
 		--norm-hi $(NORMHI) \
 		--max-fid-index $(MAXFIDINDEX) \
-		$(SPALLREDSHIFT)
+		--spall-redshift \
+		--mock \
+		--use-mock-F
 
 NUMCOMBINE=3
 WAVEMIN=3600.0
@@ -35,7 +44,7 @@ $(NAME)-cskim.hdf5: bin/analysis_prep.py $(NAME)-skim.hdf5
 		--wave-min $(WAVEMIN)
 
 
-SUBSAMPLESTEP=1
+SUBSAMPLESTEP=1000
 WAVELYA=1216.0
 FORESTMAXZ=3.5
 
@@ -59,7 +68,8 @@ $(NAME)-linear-continuum.hdf5: bin/linear_continuum.py $(NAME)-forest.hdf5
 
 $(NAME)-delta.hdf5: bin/save_deltas.py $(NAME)-linear-continuum.hdf5
 	python bin/save_deltas.py --name $(NAME) \
-		--subsample-step $(SUBSAMPLESTEP)
+		--subsample-step $(SUBSAMPLESTEP) \
+		--skip-continuum
 
 
 delta_field: $(NAME)-delta.hdf5
