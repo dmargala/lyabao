@@ -19,5 +19,4 @@ dependencies:
 - pip:
   - bossdata==0.2.8
   - fitsio==0.9.10
-  - pydl==0.5.3
   - tqdm==4.11.2
