@@ -102,7 +102,7 @@ def main():
     mask_params = (params_a > .1) & (params_a < 10) & (params_b > -10) & (params_b < 10)
 
     if args.skip_continuum:
-        mask_params = slice(0, len(mask_params))
+        mask_params = np.ones_like(mask_params, dtype=bool)
 
     delta_mean = ma.average(delta_flux[mask_params], axis=0)
     delta_mean_weighted = ma.average(delta_flux[mask_params], weights=delta_weight[mask_params], axis=0)
