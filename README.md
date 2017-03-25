@@ -29,5 +29,11 @@ export BOSS_DATA_URL=http://dr12.sdss3.org
 Run test
 
 ```
-make
+make -f makefiles/test.mk
+```
+
+Run DR12 analysis
+
+```
+make -f makefiles/dr12.mk
 ```
