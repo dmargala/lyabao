@@ -448,6 +448,9 @@ def main():
             # calculate normalization
             norm = get_norm(target, flux, ivar, norm_slice)
 
+            if args.use_mock_F:
+                norm = 1
+
             # save normalization
             skim_norm[i] = norm
 

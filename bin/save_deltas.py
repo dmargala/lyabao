@@ -27,6 +27,8 @@ def main():
         help="step size used for subsampling observations")
     parser.add_argument("--dont-save", action="store_true",
         help="dont save delta field (just do all the preprocessing)")
+    parser.add_argument("--skip-continuum", action="store_true",
+        help="skip continuum")
     args = parser.parse_args()
 
     # import data
@@ -67,6 +69,9 @@ def main():
 
     mflux = model_flux(params_a[:,np.newaxis],params_b[:,np.newaxis])
 
+    if args.skip_continuum:
+        mflux = 1
+
     # (1.0 + quasar_redshifts[:,np.newaxis])*forest_wave/args.wave_lya - 1.0
 
     print forest_pixel_redshifts.shape
@@ -95,6 +100,9 @@ def main():
     print 'Computing mean delta...'
 
     mask_params = (params_a > .1) & (params_a < 10) & (params_b > -10) & (params_b < 10)
+
+    if args.skip_continuum:
+        mask_params = slice(0, len(mask_params))
 
     delta_mean = ma.average(delta_flux[mask_params], axis=0)
     delta_mean_weighted = ma.average(delta_flux[mask_params], weights=delta_weight[mask_params], axis=0)
