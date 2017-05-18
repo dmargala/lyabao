@@ -150,6 +150,9 @@ class NormError(UniformGridException):
 class ForestError(UniformGridException):
     pass
 
+class BadPathError(UniformGridException):
+    pass
+
 
 class FullSpecFile(object):
     '''
@@ -420,7 +423,10 @@ def main():
                 get_spec_path_args['mock'] = True
                 get_spec_path_args['compressed'] = True
             remote_path = finder.get_spec_path(**get_spec_path_args)
-            local_path = mirror.get(remote_path, progress_min_size=0.1)
+            try:
+                local_path = mirror.get(remote_path, progress_min_size=0.1)
+            except RuntimeError:
+                raise BadPathError('Could not find path for {}'.format(remote_path))    
             spec = FullSpecFile(local_path)
 
             # save meta data
@@ -464,6 +470,8 @@ def main():
             log_bad_target('norm', i, str(e))
         except ForestError as e:
             log_bad_target('forest', i, str(e))
+        except BadPathError as e:
+            log_bad_target('path', i, str(e))
 
     # print summary of "bad" targets
     for kind in bad_targets.keys():
