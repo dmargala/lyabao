@@ -1,6 +1,6 @@
 MOCK_INDEX=000
-OUTDIR=output/mock_$(MOCK_INDEX)
-NAME=$(OUTDIR)/mock_$(MOCK_INDEX)
+OUTDIR=output/test_mock_$(MOCK_INDEX)
+NAME=$(OUTDIR)/test_mock_$(MOCK_INDEX)
 
 
 all: delta_field inspect
