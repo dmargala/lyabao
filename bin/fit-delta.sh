@@ -24,5 +24,5 @@ time ~/source/lyabao/bin/combine_subsamples.py \
 
 time baofit -i ~/source/baofit/config/BOSSDR11LyaF_k.ini \
     --modelroot ~/source/baofit/models/ \
-    --data "${ROOT_DIR}/${NAME}/xi-2d/cart-healpix-smooth"
+    --data "${ROOT_DIR}/${NAME}/xi-2d/cart-healpix-smooth" \
     --output-prefix "${ROOT_DIR}/${NAME}/baofit/cart-healpix-smooth-"
