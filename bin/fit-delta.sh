@@ -2,35 +2,27 @@
 set -ex
 
 NAME="$1"
+ROOT_DIR=/data/boss/lya
 
-mkdir -p /data/boss/lya/${NAME}/xi-2d || true
-mkdir -p /data/boss/lya/${NAME}/baofit || true
+mkdir -p ${ROOT_DIR}/${NAME}/xi-2d || true
+mkdir -p ${ROOT_DIR}/${NAME}/baofit || true
 
 time ~/source/turbo-octo-spice/build/h5healxi \
-    -i /data/boss/lya/${NAME}/${NAME}-delta.hdf5 \
+    -i "${ROOT_DIR}/${NAME}/${NAME}-delta.hdf5" \
     --verbose \
     --cart \
     --axis1 [0:200]*50 \
     --axis2 [0:200]*50 \
     --nthreads 10 \
     --order 5 \
-    -o /data/boss/lya/${NAME}/xi-2d/xi-2d-${NAME}-healpix \
-    --save-subsamples
+    --save-subsamples \
+    -o "${ROOT_DIR}/${NAME}/xi-2d/cart-healpix"
 
-cd /data/boss/lya/${NAME}/xi-2d
+time ~/source/lyabao/bin/combine_subsamples.py \
+    --input "${ROOT_DIR}/${NAME}/xi-2d/cart-healpix-*" \
+    --output "${ROOT_DIR}/${NAME}/xi-2d/cart-healpix-smooth"
 
-mv xi-2d-${NAME}-healpix.cov xi-2d-${NAME}-healpix.cov.orig
-
-time ~/source/turbo-octo-spice/python/est_cov.py \
-    --name "xi-2d-${NAME}-healpix-*" \
-    --save xi-2d-${NAME}-healpix.cov
-
-cd /data/boss/lya/${NAME}/baofit
-
-time baofit \
-    --data /data/boss/lya/${NAME}/xi-2d/xi-2d-${NAME}-healpix \
-    -i /home/dmargala/source/turbo-octo-spice/comoving.ini \
-    --modelroot /home/dmargala/source/baofit/models/ \
-    --dilmax 4 --dilmin 0.1 \
-    --cov-sample-size 2993
-
+time baofit -i ~/source/baofit/config/BOSSDR11LyaF_k.ini \
+    --modelroot ~/source/baofit/models/ \
+    --data "${ROOT_DIR}/${NAME}/xi-2d/cart-healpix-smooth"
+    --output-prefix "${ROOT_DIR}/${NAME}/baofit/cart-healpix-smooth-"
