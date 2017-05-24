@@ -193,6 +193,11 @@ class FullSpecFile(object):
         data['flux'][:] = hdu[column_name][:]
         data['ivar'][:] = ivar[:]
 
+        if column_name == 'mock_F':
+            meanF = hdu['mock_meanF'][:]
+            data['flux'][:] /= meanF[:]
+            data['ivar'][:] *= meanF[:]*meanF[:]
+
         return ma.MaskedArray(data, mask=bad_pixels)
 
 
@@ -426,7 +431,7 @@ def main():
             try:
                 local_path = mirror.get(remote_path, progress_min_size=0.1)
             except RuntimeError:
-                raise BadPathError('Could not find path for {}'.format(remote_path))    
+                raise BadPathError('Could not find path for {}'.format(remote_path))
             spec = FullSpecFile(local_path)
 
             # save meta data
