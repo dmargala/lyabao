@@ -104,7 +104,7 @@ def main():
     for attr_key in skim.attrs:
         outfile.attrs[attr_key] = skim.attrs[attr_key]
     outfile.attrs['coeff0'] = loglam[0]
-    outfile.attrs['coeff1'] = args.num_combine * 1e-4
+    outfile.attrs['coeff1'] = args.num_combine * skim.attrs['coeff1']
     outfile.attrs['max_fid_index'] = len(loglam)
     outfile.attrs['wave_min'] = args.wave_min
 
