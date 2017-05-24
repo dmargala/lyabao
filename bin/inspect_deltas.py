@@ -48,7 +48,11 @@ def main():
     coeff0 = infile.attrs['coeff0']
     coeff1 = infile.attrs['coeff1']
     num_wave_obs = infile.attrs['max_fid_index']
-    wave_lya = infile.attrs['wave_lya']
+    try:
+        wave_lya = infile.attrs['wave_lya']
+    except KeyError:
+        wave_lya = 1216.0
+
 
     num_sightlines = len(lines_of_sight.keys())
     # if specified, only use max_rows number of targets
