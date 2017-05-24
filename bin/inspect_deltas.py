@@ -54,7 +54,7 @@ def main():
     # if specified, only use max_rows number of targets
     if args.max_rows > 0:
         num_sightlines = args.max_rows
-    print num_sightlines
+    print('num sightlines: {:d}'.format(num_sightlines))
 
     # loop over targets
     waves = []
