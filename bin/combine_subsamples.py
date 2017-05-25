@@ -3,6 +3,7 @@ import argparse
 import glob
 
 import numpy as np
+import numpy.ma as ma
 
 import matplotlib as mpl
 mpl.use('Agg')
