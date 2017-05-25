@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
 from tqdm import tqdm
 
@@ -169,19 +170,19 @@ def main():
     print('Saving covariance matrix...')
     save_cov(args.output + '.cov', cov)
 
+    plot_2d_xi(args.output + '-xi-2d.png', r, xi)
 
 
-def plot_2d_xi():
+def plot_2d_xi(filename, r, xi, rmin=10, rmax=190, mask_radius=185):
     # plot 2d xi image
     fig, ax = plt.subplots(figsize=(8, 6))
 
-    xx, yy = np.meshgrid(2 + np.arange(0, 200, 4), 2 + np.arange(0, 200, 4))
+    xx, yy = np.meshgrid(r, r)
     rr = xx*xx + yy*yy
 
-    rsq_xi = rr*avg_xi.reshape(50, 50)
-    ma_rsq_xi = ma.masked_where((rr < 10**2) | (rr > 190**2), rsq_xi)
+    rsq_xi = rr*xi.reshape(len(r), len(r))
+    ma_rsq_xi = ma.masked_where((rr < rmin**2) | (rr > rmax**2), rsq_xi)
 
-    mask_radius = 185
     circ = patches.Circle((0, 0), mask_radius, facecolor='none')
     ax.add_patch(circ)  # Plot the outline
 
@@ -199,6 +200,9 @@ def plot_2d_xi():
     ax.tick_params(direction='in', labelsize=16)
 
     fig.colorbar(im, ax=ax)
+
+    plt.savefig(filename, dpi=100, bbox_inches='tight')
+    plt.close()
 
 
 def plot_npair_per_bin():
