@@ -172,6 +172,7 @@ def main():
     save_cov(args.output + '.cov', cov)
 
     plot_2d_xi(args.output + '-xi-2d.png', r, xi)
+    plot_npair_per_bin(args.output + '-xi-npair.png', npair_s)
 
 
 def plot_2d_xi(filename, r, xi, rmin=10, rmax=190, mask_radius=185):
@@ -206,7 +207,7 @@ def plot_2d_xi(filename, r, xi, rmin=10, rmax=190, mask_radius=185):
     plt.close()
 
 
-def plot_npair_per_bin():
+def plot_npair_per_bin(filename, npair_s):
     # xi bin pair count
     fig, axes = plt.subplots(nrows=2, figsize=(12, 8))
 
@@ -225,6 +226,9 @@ def plot_npair_per_bin():
     ax.set_ylabel('-log(npair)', fontsize=16)
 
     ax.tick_params(direction='in', labelsize=14)
+
+    plt.savefig(filename, dpi=100, bbox_inches='tight')
+    plt.close()
 
 
 def plot_cov_diag():

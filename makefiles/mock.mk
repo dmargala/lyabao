@@ -1,12 +1,12 @@
 MOCK_INDEX=000
-OUTDIR=output/mock_$(MOCK_INDEX)
-NAME=$(OUTDIR)/mock_$(MOCK_INDEX)
+OUTDIR=output/mock-$(MOCK_INDEX)
+NAME=$(OUTDIR)/mock-$(MOCK_INDEX)
+TARGETLIST=data/mock_goodtargets_1_10.txt
 
 
 all: delta_field inspect
 
 
-TARGETLIST=data/mock_goodtargets_1_10.txt
 NTARGETS=0
 FORESTLO=1040
 FORESTHI=1200
@@ -17,13 +17,14 @@ SPALLREDSHIFT="--spall-redshift"
 MOCK="--mock"
 
 
+
 $(OUTDIR):
 	-mkdir -p $(OUTDIR)
 
 $(NAME)-skim.hdf5: bin/uniform_grid.py $(TARGETLIST) $(OUTDIR)
 	export BOSS_LOCAL_ROOT=/share/dm/all; \
 	export BOSS_SAS_PATH=/sas/dr12/boss; \
-	export BOSS_REDUX_VERSION=M3_0_0/$(MOCK_INDEX); \
+	export BOSS_REDUX_VERSION=M3_0/$(MOCK_INDEX); \
 	python bin/uniform_grid.py --name $(NAME) \
 		-i $(TARGETLIST) \
 		--verbose \

@@ -80,9 +80,9 @@ def test_trig1(ra, dec, z, eps):
     assert abs(dr_perp - test_dr_perp) < threshold1
 
     cases1.append((
-        p1.ra, p1.dec, p1.z,
-        p2.ra, p2.dec, p2.z,
-        test_dr_para, test_dr_perp, dr_para, dr_perp))
+        p1.ra, p1.dec, p1.z, p1.r,
+        p2.ra, p2.dec, p2.z, p2.r,
+        test_dr_para, test_dr_perp, dr_para - test_dr_para, dr_perp - test_dr_perp))
 
 
 eps2_min, eps2_max = -1, 1
@@ -113,9 +113,9 @@ def test_trig2(ra, dec, z, eps):
     assert abs(dr_perp - test_dr_perp) < threshold2
 
     cases2.append((
-        p1.ra, p1.dec, p1.z,
-        p2.ra, p2.dec, p2.z,
-        test_dr_para, test_dr_perp, dr_para, dr_perp))
+        p1.ra, p1.dec, p1.z, p1.r,
+        p2.ra, p2.dec, p2.z, p2.r,
+        test_dr_para, test_dr_perp, dr_para - test_dr_para, dr_perp - test_dr_perp))
 
 eps3_min, eps3_max = -1, 1
 threshold3 = 1e-2
@@ -144,9 +144,9 @@ def test_trig3(ra, dec, z, eps):
     assert abs(dr_perp - test_dr_perp) < threshold3
 
     cases3.append((
-        p1.ra, p1.dec, p1.z,
-        p2.ra, p2.dec, p2.z,
-        test_dr_para, test_dr_perp, dr_para, dr_perp))
+        p1.ra, p1.dec, p1.z, p1.r,
+        p2.ra, p2.dec, p2.z, p2.r,
+        test_dr_para, test_dr_perp, dr_para - test_dr_para, dr_perp - test_dr_perp))
 
 
 if __name__ == '__main__':
@@ -155,9 +155,9 @@ if __name__ == '__main__':
     test_trig3()
 
     header = (
-        'ra1 dec1 z1 '
-        'ra2 dec2 z2 '
-        'test_dr_para test_dr_perp dr_para dr_perp'
+        'ra1 dec1 z1 r1 '
+        'ra2 dec2 z2 r2 '
+        'test_dr_para test_dr_perp delta_dr_para delta_dr_perp'
         )
 
     np.savetxt('test_trig1.txt', cases1, fmt='%.8f', header=header)
